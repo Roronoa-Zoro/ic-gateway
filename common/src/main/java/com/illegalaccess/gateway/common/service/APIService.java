@@ -6,14 +6,19 @@ import com.google.common.cache.CacheBuilder;
 import com.illegalaccess.gateway.common.entity.APIGroup;
 import com.illegalaccess.gateway.common.entity.APIInfo;
 import com.illegalaccess.gateway.common.entity.APISslKey;
+import com.illegalaccess.gateway.common.entity.ClientRequestInfo;
 import com.illegalaccess.gateway.common.enums.APIAuthTypeEnum;
+import com.illegalaccess.gateway.common.function.SafeFunction;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+
+import static com.illegalaccess.gateway.common.function.SafeFunction.execInSafeMode;
 
 @Slf4j
 @Service
@@ -31,6 +36,10 @@ public class APIService {
             .build();
 
     Cache<Long, APISslKey> saltCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(1L, TimeUnit.HOURS)
+            .build();
+
+    Cache<String, ClientRequestInfo> clientCache = CacheBuilder.newBuilder()
             .expireAfterWrite(1L, TimeUnit.HOURS)
             .build();
     /**
@@ -67,6 +76,21 @@ public class APIService {
             log.error("get group auth type fail, arg:{}, return invalid", groupId, e);
         }
         return APIAuthTypeEnum.Invalid.getAuthType();
+    }
+
+    public ClientRequestInfo getClientInfoById(String requestId) {
+        Callable<ClientRequestInfo> callable = () -> SafeFunction.execInSafeMode((t) -> {
+            Object value = stringRedisTemplate.opsForHash().get(ClientRequestInfo.tableName, t);
+            ClientRequestInfo ai = JSON.parseObject(value.toString(), ClientRequestInfo.class);
+            return ai;
+        }, () -> null, requestId);
+
+        try {
+            return clientCache.get(requestId, callable);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

@@ -31,4 +31,6 @@ public class HttpRequestDTO {
     private String sendTime;
 
     private String requestUrl;//请求过来的URL
+
+    private String clientIp; //发起请求的IP
 }

@@ -1,4 +1,4 @@
-package com.illegalaccess.gateway.netty.filter;
+package com.illegalaccess.gateway.netty.codec;
 
 import com.alibaba.fastjson.JSON;
 import com.illegalaccess.gateway.dto.HttpRequestDTO;

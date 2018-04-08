@@ -29,4 +29,6 @@ public class HttpRequestDTO {
      * 客户端发送请求 时间 yyyy-MM-dd HH-mm-ss:SSS
      */
     private String sendTime;
+
+    private String requestUrl;//请求过来的URL
 }

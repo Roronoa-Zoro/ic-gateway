@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 
 /**
  * Created by Administrator on 2018/4/8.
+ * 数字签名 安全检查
  */
 @Slf4j
 @Service

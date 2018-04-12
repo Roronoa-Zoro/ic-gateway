@@ -9,6 +9,8 @@ import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalField;
 import java.time.temporal.TemporalUnit;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class DateTimeTest {
 
@@ -30,5 +32,14 @@ public class DateTimeTest {
 
         System.out.println(ChronoUnit.MICROS.between(t1, t2));
 
+    }
+
+    @Test
+    public void mapDefaultTest() {
+        ConcurrentMap<String, String> map = new ConcurrentHashMap<>();
+        String value = map.getOrDefault("hello", "world");
+        System.out.println("value===" + value);
+        String v2 = map.get("hello");
+        System.out.println("v2=====" + v2);
     }
 }

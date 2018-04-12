@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 
 /**
  * Created by Administrator on 2018/4/8.
+ * ip 白名单检查
  */
 @Slf4j
 @Service
